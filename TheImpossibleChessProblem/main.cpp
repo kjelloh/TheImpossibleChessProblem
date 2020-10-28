@@ -23,6 +23,7 @@ void flip_coin(ChessBoard& chess_board,int index) {
 }
 
 void print_chess_board(ChessBoard const& chess_board) {
+    std::cout << "\n";
     for (unsigned char i = 0; i < 64 ; ++i) {
         if (not (i % 8)) {
             std::cout << "\n\t";
@@ -121,11 +122,47 @@ bool test_board(ChessBoard const& chess_board) {
     return result;
 }
 
+ChessBoard chessboard_from_text(std::vector<std::string> const& chess_board_text_array) {
+    ChessBoard result {};
+    unsigned char index {0};
+    for (auto const& sRow : chess_board_text_array) {
+        for (auto ch : sRow) {
+            result.push_back(chess_board_square {index++,(ch == 'H')});
+        }
+    }
+    return result;
+}
+
+ChessBoard example_1_chess_board() {
+    return chessboard_from_text({
+         "TTHHTTHH"
+        ,"THHTTTHT"
+        ,"TTHHTTTH"
+        ,"THHTTTHT"
+        ,"TTHTTTTT"
+        ,"TTHTTTTT"
+        ,"TTHHHTHT"
+        ,"TTHTHTTH"
+    });
+}
+
+ChessBoard example_2_chess_board() {
+    return chessboard_from_text({
+         "THTHTHTT"
+        ,"THHTTTTH"
+        ,"THHHTHTH"
+        ,"TTHTTTTT"
+        ,"TTHHHHHT"
+        ,"TTHTTTTT"
+        ,"THTHTTTT"
+        ,"THHTHTTH"
+    });
+}
+
 int main(int argc, const char * argv[]) {
     ChessBoard chess_board {};
     init_chess_board(chess_board);
     test_board(chess_board);
-    
     
     // Flip a coin on the board
     flip_coin(chess_board, 63); // Should encode 111111
@@ -135,6 +172,33 @@ int main(int argc, const char * argv[]) {
     Encoding encoding {};
     encoding = decode_board(chess_board);
     print_encoding(encoding);
+
+    // Print encoding of example 1
+    {
+        auto chess_board_example_1 = example_1_chess_board();
+        print_chess_board(chess_board_example_1);
+        std::cout << "\n\nExample 1 Encoding:";
+        print_encoding(decode_board(chess_board_example_1));
+        //Print encoing of example 1 flipped board
+        flip_coin(chess_board_example_1, 63);
+        print_chess_board(chess_board_example_1);
+        std::cout << "\n\nExample 1 Flipped Encoding:";
+        print_encoding(decode_board(chess_board_example_1));
+    }
+
+    // Print encoding of example 2
+    {
+        auto chess_board_example_2 = example_2_chess_board();
+        print_chess_board(chess_board_example_2);
+        std::cout << "\n\nExample 2 Encoding:";
+        print_encoding(decode_board(chess_board_example_2));
+        //Print encoing of example 2 flipped board
+        flip_coin(chess_board_example_2, 38);
+        print_chess_board(chess_board_example_2);
+        std::cout << "\n\nExample 2 Flipped Encoding:";
+        print_encoding(decode_board(chess_board_example_2));
+    }
+
     
     std::cout << "\n\n";
     return 0;
